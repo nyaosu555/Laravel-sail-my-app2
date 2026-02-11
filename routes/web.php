@@ -5,17 +5,38 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
-Route::resource('post', PostController::class);
+// Route::resource('post', PostController::class);
+
+// Route::get('/', function() {
+//     return view('welcome');
+// });
+
+// Route::get('dashboard', function() {
+//     return view('dashboard');
+// }) ->middleware(['auth', 'verified']) -> name('dashboard');
+
+// Route::middleware('auth')->group(function() {
+//     Route::get('/profile', [ProfileController::class, 'edit']) -> name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update']) ->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy']) -> name('profile.destroy');
+// });
 
 Route::get('/', function() {
     return view('welcome');
 });
 
-Route::get('dashboard', function() {
-    return view('dashboard');
-}) -> name('dashboard');
+// 認証必須ページ（ログイン+メール認証済み　のみ）
+Route::middleware(['auth', 'verified'])->group(function() {
 
-Route::middleware('auth')->group(function() {
+    // ダッシュボード
+    Route::get('dashboard', function() {
+        return view('dashboard');
+    }) -> name('dashboard');
+
+    // 投稿機能系
+    Route::resource('post', PostController::class);
+
+    // プロフィール機能
     Route::get('/profile', [ProfileController::class, 'edit']) -> name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update']) ->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy']) -> name('profile.destroy');
